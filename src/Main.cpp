@@ -1,10 +1,26 @@
-#include <model/ActionLedger.h>
+#include <prisoners/Prisoner.h>
+#include <prisoners/AllCooperate.h>
+#include <prisoners/AllDefect.h>
+#include <model/Jailhouse.h>
 
 int main(int argc, char** argv) {
-	auto ledger = new ActionLedger(5, 5);
+	PrisonerList prisoners({
+		PrisonerPointer(new AllDefect()),
+		PrisonerPointer(new AllDefect()),
+		PrisonerPointer(new AllDefect()),
+		PrisonerPointer(new AllDefect()),
+		PrisonerPointer(new AllDefect()),
+		PrisonerPointer(new AllCooperate()),
+		PrisonerPointer(new AllCooperate()),
+		PrisonerPointer(new AllCooperate()),
+		PrisonerPointer(new AllCooperate()),
+	});
 
-	ledger->set(Action::Defect, 0, 0, 0);
+	Jailhouse jail(&prisoners, 10);
+	jail.run();
 
-	delete ledger;
+	auto ledger = jail.ledger();
+	std::cout << *ledger;
+
 	return 0;
 }

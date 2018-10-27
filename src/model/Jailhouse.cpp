@@ -1,6 +1,6 @@
 #include "Jailhouse.h"
 
-Jailhouse::Jailhouse(prisonerList* prisoners, uint numRounds)
+Jailhouse::Jailhouse(PrisonerList* prisoners, uint numRounds)
 	: _prisoners(prisoners)
 	, _numRounds(numRounds)
 	, _currRound(0)

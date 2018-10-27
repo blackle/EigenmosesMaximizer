@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <model/ActionLedger.h>
 
 struct PrisonerKnowledge {
@@ -21,4 +22,5 @@ public:
 	virtual Action decide(const PrisonerKnowledge& p) const = 0;
 };
 
-typedef std::vector<Prisoner*> prisonerList;
+typedef std::shared_ptr<Prisoner> PrisonerPointer;
+typedef std::vector<PrisonerPointer> PrisonerList;

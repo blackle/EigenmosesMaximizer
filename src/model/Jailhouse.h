@@ -5,7 +5,7 @@
 
 class Jailhouse {
 public:
-	Jailhouse(prisonerList* prisoners, uint numRounds);
+	Jailhouse(PrisonerList* prisoners, uint numRounds);
 	Jailhouse(const Jailhouse&) = delete;
 	~Jailhouse();
 
@@ -17,7 +17,7 @@ private:
 
 	void runSingleSide(uint t, uint b1, uint b2);
 
-	const prisonerList * const _prisoners;
+	const PrisonerList * const _prisoners;
 	const uint _numRounds;
 	uint _currRound;
 	ActionLedger * const _ledger;
