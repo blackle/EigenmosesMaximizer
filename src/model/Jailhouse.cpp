@@ -1,4 +1,5 @@
 #include "Jailhouse.h"
+#include <assert.h>
 
 Jailhouse::Jailhouse(PrisonerList* prisoners, uint numRounds)
 	: _prisoners(prisoners)
@@ -34,5 +35,6 @@ void Jailhouse::runSingleSide(uint t, uint b1, uint b2) {
 	// This can allow the second player to peek at what the first one chose, which is bad...
 	PrisonerKnowledge knowledge(_ledger, t, b1, b2);
 	auto choice = (*_prisoners)[b1]->decide(knowledge);
+	assert(choice != Action::Undefined);
 	_ledger->set(choice, t, b1, b2);
 }

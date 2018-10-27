@@ -3,14 +3,16 @@
 #include <prisoners/AllDefect.h>
 #include <prisoners/Stochastic.h>
 #include <prisoners/TitForTat.h>
+#include <prisoners/GrimTrigger.h>
 #include <model/Jailhouse.h>
 
 int main(int argc, char** argv) {
 	PrisonerList prisoners({
 		PrisonerPointer(new AllCooperate()),
 		PrisonerPointer(new AllDefect()),
-		PrisonerPointer(new Stochastic(0.50)),
+		PrisonerPointer(new Stochastic(0.5)),
 		PrisonerPointer(new TitForTat()),
+		PrisonerPointer(new GrimTrigger()),
 	});
 
 	Jailhouse jail(&prisoners, 10);
