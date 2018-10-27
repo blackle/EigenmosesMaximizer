@@ -15,7 +15,7 @@ public:
 
 private:
 
-	void runSingleSide(uint t, uint b1, uint b2);
+	Action runSingleSide(uint t, uint b1, uint b2) const;
 
 	const PrisonerList * const _prisoners;
 	const uint _numRounds;
