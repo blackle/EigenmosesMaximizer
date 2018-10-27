@@ -1,85 +1,51 @@
 #include <iostream>
+#include "src/Action.h"
+#include "src/Readable.h"
+#include "src/Writable.h"
+#include "src/ActionLedger.h"
 
-enum class Action {
-	Undefined = 0,
-	Cooperate = 1,
-	Defect = 2,
-};
 
-template<typename Type, typename... Indexes>
-class Readable {
-public:
-	virtual Type get(Indexes... indexes) const = 0;
-};
+// class AllCooperate : public Prisoner {
+// 	Action decide(const PrisonerKnowledge& p) const;
+// };
 
-template<typename Type, typename... Indexes>
-class Writable {
-public:
-	virtual bool set(Type val, Indexes... indexes) = 0;
-};
+// Action AllCooperate::decide(const PrisonerKnowledge& p) const {
+// 	return Action::Cooperate;
+// }
 
-typedef Readable<Action, uint, uint, uint> ReadableActionLedger;
-typedef Writable<Action, uint, uint, uint> WritableActionLedger;
+// class AllDefect : public Prisoner {
+// 	Action decide(const PrisonerKnowledge& p) const;
+// };
 
-class ActionLedger : public ReadableActionLedger, public WritableActionLedger {
-public:
-	ActionLedger(uint numRounds, uint numBots);
-	~ActionLedger();
+// Action AllDefect::decide(const PrisonerKnowledge& p) const {
+// 	return Action::Defect;
+// }
 
-	virtual Action get(uint t, uint b1, uint b2) const;
-	virtual bool set(Action val, uint t, uint b1, uint b2);
+// class Stochastic : public Prisoner {
+// 	Action decide(const PrisonerKnowledge& p) const;
+// };
 
-private:
-	inline size_t offsetFromIndexes(uint t, uint b1, uint b2) const;
+// Action Stochastic::decide(const PrisonerKnowledge& p) const {
+// 	//please implement me
+// 	return Action::Defect;
+// }
 
-	const int _numRounds;
-	const int _numBots;
-	Action* _actions;
-};
+// class TitForTat : public Prisoner {
+// 	Action decide(const PrisonerKnowledge& p) const;
+// };
 
-ActionLedger::ActionLedger(uint numRounds, uint numBots)
-	: _numRounds(numRounds)
-	, _numBots(numBots)
-{
-	size_t numCells = numBots * numBots * numRounds;
-	_actions = new Action[numCells] {};
-}
+// Action TitForTat::decide(const PrisonerKnowledge& p) const {
+// 	//please implement me
+// 	return Action::Defect;
+// }
 
-ActionLedger::~ActionLedger() {
-	delete[] _actions;
-}
 
-size_t ActionLedger::offsetFromIndexes(uint t, uint b1, uint b2) const {
-	return t * _numBots * _numBots + b1 * _numBots + b2;
-}
+// int main(int argc, char** argv) {
+// 	auto ledger = new ActionLedger(5, 5);
 
-Action ActionLedger::get(uint t, uint b1, uint b2) const {
-	if (t >= _numRounds || b1 >= _numBots || b2 >= _numBots) {
-		return Action::Undefined;
-	}
+// 	ledger->set(Action::Defect, 0, 0, 0);
+// 	readFromReadable(ledger);
 
-	return _actions[offsetFromIndexes(t, b1, b2)];
-}
-
-bool ActionLedger::set(Action val, uint t, uint b1, uint b2) {
-	if (t >= _numRounds || b1 >= _numBots || b2 >= _numBots) {
-		return false;
-	}
-
-	_actions[offsetFromIndexes(t, b1, b2)] = val;
-	return true;
-}
-
-void readFromReadable(ReadableActionLedger* readable) {
-	std::cout << static_cast<int>(readable->get(0, 0, 0)) << std::endl;
-}
-
-int main(int argc, char** argv) {
-	auto ledger = new ActionLedger(5, 5);
-
-	ledger->set(Action::Defect, 0, 0, 0);
-	readFromReadable(ledger);
-
-	delete ledger;
-	return 0;
-}
+// 	delete ledger;
+// 	return 0;
+// }
