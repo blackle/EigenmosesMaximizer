@@ -1,6 +1,5 @@
 #pragma once
 
-#include <random>
 #include "Prisoner.h"
 
 class Stochastic : public Prisoner {

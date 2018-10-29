@@ -23,6 +23,7 @@ int main(int, char**) {
 	jail.run();
 
 	auto ledger = jail.ledger();
+	std::cout << (*ledger);
 
 	auto coop = CooperationMatrixCalc::calc(ledger);
 	auto scores = EigenMosesCalc::calc(coop);
@@ -32,4 +33,5 @@ int main(int, char**) {
 }
 
 // TODO:
-//  * Calculate eigenmoses/good-partner-ranking and compare against python code
+//  * consider giving the bots state for speed, but keep them const, and pass lambdas that create them into Jailhouse so if we want to reset their state later we can just realloc them
+//  * figure out the deal with passing uint vs int into the various places

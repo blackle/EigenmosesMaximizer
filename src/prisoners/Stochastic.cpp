@@ -1,4 +1,5 @@
 #include "Stochastic.h"
+#include <random>
 
 Stochastic::Stochastic(float coopProb, uint seed)
 	: _coopProb(coopProb)
