@@ -1,7 +1,8 @@
 #pragma once
 
 #include <prisoners/Prisoner.h>
-#include "Ledger.h"
+
+class Ledger;
 
 class Jailhouse {
 public:

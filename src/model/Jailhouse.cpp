@@ -1,4 +1,5 @@
 #include "Jailhouse.h"
+#include "Ledger.h"
 #include <assert.h>
 
 Jailhouse::Jailhouse(PrisonerList* prisoners, uint numRounds)
