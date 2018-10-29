@@ -1,7 +1,7 @@
 #pragma once
 
 #include <prisoners/Prisoner.h>
-#include "ActionLedger.h"
+#include "Ledger.h"
 
 class Jailhouse {
 public:
@@ -9,16 +9,17 @@ public:
 	Jailhouse(const Jailhouse&) = delete;
 	~Jailhouse();
 
-	const ReadableActionLedger* ledger() const;
+	const Ledger* ledger() const;
 
 	void run();
 
 private:
 
-	Action runSingleSide(uint t, uint b1, uint b2) const;
+	Action runSingleSide(uint b1, uint b2, uint t) const;
 
 	const PrisonerList * const _prisoners;
+	const uint _numBots;
 	const uint _numRounds;
 	uint _currRound;
-	ActionLedger * const _ledger;
+	Ledger * const _ledger;
 };

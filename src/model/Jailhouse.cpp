@@ -3,37 +3,38 @@
 
 Jailhouse::Jailhouse(PrisonerList* prisoners, uint numRounds)
 	: _prisoners(prisoners)
+	, _numBots(prisoners->size())
 	, _numRounds(numRounds)
 	, _currRound(0)
-	, _ledger(new ActionLedger(numRounds, prisoners->size()))
+	, _ledger(new Ledger(_numBots, _numRounds))
 {}
 
 Jailhouse::~Jailhouse() {
 	delete _ledger;
 }
 
-const ReadableActionLedger* Jailhouse::ledger() const {
+const Ledger* Jailhouse::ledger() const {
 	return _ledger;
 }
 
 void Jailhouse::run() {
 	for (uint t = 0; t < _numRounds; t++) {
-		for (uint b1 = 0; b1 < _prisoners->size(); b1++) {
-			for (uint b2 = 0; b2 < _prisoners->size(); b2++) {
-				auto b1choice = runSingleSide(t, b1, b2);
-				auto b2choice = runSingleSide(t, b2, b1);
+		for (uint b1 = 0; b1 < _numBots; b1++) {
+			for (uint b2 = 0; b2 < _numBots; b2++) {
+				auto b1choice = runSingleSide(b1, b2, t);
+				auto b2choice = runSingleSide(b2, b1, t);
 				if (b1 == b2) {
 					assert(b1choice == b2choice);
 				}
-				_ledger->set(b1choice, t, b1, b2);
-				_ledger->set(b2choice, t, b2, b1);
+				(*_ledger)(b1, b2, t) = b1choice;
+				(*_ledger)(b2, b1, t) = b2choice;
 			}
 		}
 	}
 }
 
-Action Jailhouse::runSingleSide(uint t, uint b1, uint b2) const {
-	PrisonerKnowledge knowledge(_ledger, t, b1, b2);
+Action Jailhouse::runSingleSide(uint b1, uint b2, uint t) const {
+	PrisonerKnowledge knowledge(_ledger, b1, b2, t);
 	auto choice = (*_prisoners)[b1]->decide(knowledge);
 	assert(choice != Action::Undefined);
 	return choice;

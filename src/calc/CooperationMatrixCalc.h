@@ -1,9 +1,9 @@
 #pragma once
 
-#include <model/ActionLedger.h>
+#include <model/Ledger.h>
 #include <armadillo>
 
 class CooperationMatrixCalc {
 public:
-	static arma::fmat calc(const ReadableActionLedger* ledger);
+	static arma::fmat calc(const Ledger* ledger);
 };

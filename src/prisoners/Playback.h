@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Prisoner.h"
-#include <model/ActionLedger.h>
+#include <armadillo>
 
 class Playback : public Prisoner {
 public:
-	Playback(ActionLedger* ledger);
+	explicit Playback(arma::field<Action> actions);
 	Action decide(const PrisonerKnowledge& p) const;
 private:
-	const ActionLedger * const _ledger;
+	const arma::field<Action> _actions;
 };

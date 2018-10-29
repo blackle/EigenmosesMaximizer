@@ -1,9 +1,9 @@
 #include "Playback.h"
 
-Playback::Playback(ActionLedger* ledger)
-	: _ledger(ledger)
+Playback::Playback(arma::field<Action> actions)
+	: _actions(actions)
 {}
 
 Action Playback::decide(const PrisonerKnowledge& p) const {
-	return _ledger->get(p.time, p.thisIndex, p.theirIndex);
+	return _actions(p.time, p.theirIndex);
 }

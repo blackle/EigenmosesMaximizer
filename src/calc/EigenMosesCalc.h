@@ -4,5 +4,5 @@
 
 class EigenMosesCalc {
 public:
-	static arma::fvec calc(const arma::fmat& coop, uint iters = 100);
+	static arma::fvec calc(const arma::fmat& coop, uint iters = 10);
 };

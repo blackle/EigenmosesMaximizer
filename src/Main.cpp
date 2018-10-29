@@ -8,7 +8,7 @@
 #include <calc/CooperationMatrixCalc.h>
 #include <calc/EigenMosesCalc.h>
 
-int main(int argc, char** argv) {
+int main(int, char**) {
 	PrisonerList prisoners({
 		PrisonerPointer(new AllCooperate()),
 		PrisonerPointer(new AllDefect()),

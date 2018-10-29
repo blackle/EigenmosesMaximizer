@@ -1,5 +1,5 @@
 #include "AllCooperate.h"
 
-Action AllCooperate::decide(const PrisonerKnowledge& p) const {
+Action AllCooperate::decide(const PrisonerKnowledge&) const {
 	return Action::Cooperate;
 }

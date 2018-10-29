@@ -2,23 +2,24 @@
 
 #include <vector>
 #include <memory>
-#include <model/ActionLedger.h>
+#include <model/Ledger.h>
 
 struct PrisonerKnowledge {
-	PrisonerKnowledge(ReadableActionLedger* ledger, uint time, uint thisIndex, uint theirIndex)
+	PrisonerKnowledge(const Ledger* ledger, uint thisIndex, uint theirIndex, int time)
 		: ledger(ledger)
-		, time(time)
 		, thisIndex(thisIndex)
-		, theirIndex(theirIndex) {};
+		, theirIndex(theirIndex)
+		, time(time) {};
 
-	const ReadableActionLedger* ledger;
-	uint time;
+	const Ledger* ledger;
 	uint thisIndex;
 	uint theirIndex;
+	int time;
 };
 
 class Prisoner {
 public:
+	virtual ~Prisoner() = default;
 	virtual Action decide(const PrisonerKnowledge& p) const = 0;
 };
 
