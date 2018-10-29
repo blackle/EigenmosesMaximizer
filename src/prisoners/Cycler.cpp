@@ -8,7 +8,7 @@ Cycler::Cycler(uint coopLen, uint defectLen, uint offset)
 
 Action Cycler::decide(const PrisonerKnowledge& p) const {
 	auto cycleLen = _coopLen + _defectLen;
-	auto idx = (p.time + cycleLen - _offset) % cycleLen;
+	auto idx = (p.time + _offset) % cycleLen;
 
 	if (idx < _coopLen) {
 		return Action::Cooperate;

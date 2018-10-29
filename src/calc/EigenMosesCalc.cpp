@@ -8,8 +8,8 @@ arma::fvec EigenMosesCalc::calc(const arma::fmat& coop, uint iters) {
 
 	for (uint i = 0; i < iters; i++) {
 		scores = coopDef * scores;
-		scores *= 1.0/arma::sum(scores);
+		scores *= 1.0/arma::sum(arma::abs(scores));
 	}
 
-	return scores;
+	return scores * n_rows;
 }

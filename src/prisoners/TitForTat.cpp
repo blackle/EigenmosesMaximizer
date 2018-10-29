@@ -2,9 +2,9 @@
 
 Action TitForTat::decide(const PrisonerKnowledge& p) const {
 	auto lastAction = (*p.ledger)(p.theirIndex, p.thisIndex, p.time - 1);
-	if (lastAction == Action::Undefined) {
-		return Action::Cooperate;
+	if (lastAction == Action::Defect) {
+		return Action::Defect;
 	} else {
-		return lastAction;
+		return Action::Cooperate;
 	}
 }
