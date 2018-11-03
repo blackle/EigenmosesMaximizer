@@ -5,7 +5,7 @@
 
 class Playback : public Prisoner {
 public:
-	explicit Playback(arma::field<Action> actions);
+	explicit Playback(const arma::field<Action>& actions);
 	Action decide(const PrisonerKnowledge& p) const;
 private:
 	const arma::field<Action> _actions;

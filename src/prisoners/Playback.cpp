@@ -1,6 +1,6 @@
 #include "Playback.h"
 
-Playback::Playback(arma::field<Action> actions)
+Playback::Playback(const arma::field<Action>& actions)
 	: _actions(actions)
 {}
 

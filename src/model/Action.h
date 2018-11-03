@@ -8,4 +8,6 @@ enum class Action {
 	Defect = -1,
 };
 
+Action operator~(const Action& action);
+
 std::ostream& operator<<(std::ostream& o, const Action& action);
