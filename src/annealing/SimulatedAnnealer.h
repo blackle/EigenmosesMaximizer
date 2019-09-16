@@ -1,12 +1,13 @@
 #pragma once
+#include <random>
+#include <cstdlib>
+#include "TemperatureSchedule.h"
 
 template<typename T>
 class NeighbourGenerator;
 
 template<typename T>
 class EnergyFunction;
-
-class TemperatureSchedule;
 
 template<typename T>
 class SimulatedAnnealer {
@@ -47,17 +48,24 @@ SimulatedAnnealer<T>::~SimulatedAnnealer() {
 template<typename T>
 void SimulatedAnnealer<T>::anneal() {
 	for (int i = 0; i < _numIters; i++) {
-		// float time = (float)(i) / (float)(_numIters - 1);
-		// float temp = _schedule->temperature(time);
+		float time = (float)(i) / (float)(_numIters - 1);
+		float temp = _schedule->temperature(time);
 
 		auto candidate = _generator->generate(_currentState);
 
 		float candidateEnergy = _energy->energy(candidate);
 		float currEnergy = _energy->energy(_currentState);
+		float diff = candidateEnergy - currEnergy;
+
+		float acceptanceProb = (candidateEnergy < currEnergy) ? 1.0 : std::exp(-diff / temp);
 
 		std::cout << "currEnergy: " << currEnergy << std::endl;
 
-		if (candidateEnergy < currEnergy) {
+		std::random_device device;
+		std::mt19937 generator(device());
+		std::bernoulli_distribution dist(acceptanceProb);
+
+		if (dist(generator)) {
 			_currentState = candidate;
 		}
 	}

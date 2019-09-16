@@ -1,4 +1,5 @@
 #include <random>
+#include <cstdlib>
 #include <prisoners/Prisoner.h>
 #include <prisoners/AllCooperate.h>
 #include <prisoners/AllDefect.h>
@@ -10,9 +11,12 @@
 #include <prisoners/GrimTrigger.h>
 #include <prisoners/Cycler.h>
 #include <prisoners/Playback.h>
+#include <prisoners/Tsundere.h>
+#include <prisoners/Yandere.h>
 #include <model/Jailhouse.h>
 #include <calc/CooperationMatrixCalc.h>
 #include <calc/EigenMosesCalc.h>
+#include <calc/ExpMosesCalc.h>
 #include <annealing/SimulatedAnnealer.h>
 #include <annealing/TemperatureSchedule.h>
 #include <annealing/NeighbourGenerator.h>
@@ -21,7 +25,7 @@
 
 int main(int, char**) {
 	constexpr int iterations = 25;
-	constexpr int numBots = 10;
+	constexpr int numBots = 12;
 
 	class EigenMosesEnergy : public EnergyFunction<arma::field<Action>> {
 	public:
@@ -30,11 +34,15 @@ int main(int, char**) {
 				PrisonerPointer(new Playback(state)),
 				PrisonerPointer(new AllDefect()),
 				PrisonerPointer(new AllCooperate()),
+				PrisonerPointer(new Tsundere()),
+				PrisonerPointer(new Yandere(0)),
+				PrisonerPointer(new Yandere(4)),
+				PrisonerPointer(new Yandere(5)),
 				// PrisonerPointer(new Cycler(9, 1)),
 				// PrisonerPointer(new Cycler(1, 9)),
-				PrisonerPointer(new Cycler(1, 1)),
+				// PrisonerPointer(new Cycler(1, 1)),
 				// PrisonerPointer(new Stochastic(0.25)),
-				PrisonerPointer(new Stochastic(0.50)),
+				// PrisonerPointer(new Stochastic(0.50)),
 				// PrisonerPointer(new Stochastic(0.75)),
 				PrisonerPointer(new TitForTat()),
 				PrisonerPointer(new TitForTwoTats()),
@@ -58,8 +66,8 @@ int main(int, char**) {
 
 	class MyTemperatureSchedule : public TemperatureSchedule {
 	public:
-		float temperature(float) const {
-			return 0.0;
+		float temperature(float time) const {
+			return std::pow(1.0 - time, 4.0)*0.05 + 0.00005;
 		};
 	};
 
@@ -68,22 +76,26 @@ int main(int, char**) {
 		const arma::field<Action> generate(const arma::field<Action>& state) const {
 			arma::field<Action> newState(state);
 			std::random_device device;
-	    std::mt19937 generator(device());
+			std::mt19937 generator(device());
 			std::uniform_int_distribution<int> rowDist(0, state.n_rows-1);
 			std::uniform_int_distribution<int> colDist(0, state.n_cols-1);
 			// std::bernoulli_distribution rowInvertDist(0.1);
 			std::bernoulli_distribution colInvertDist(0.1);
+			std::bernoulli_distribution swapDist(0.1);
 
 			int randRow = rowDist(generator);
 			int randCol = colDist(generator);
 
 			// bool rowInvert = rowInvertDist(generator);
-			bool colInvert = colInvertDist(generator);
+			bool colInvert = false;// colInvertDist(generator);
+			bool swap = swapDist(generator);
 
 			if (colInvert) {
 				for (uint i = 0; i < state.n_rows; i++) {
 					newState(i, randCol) = ~newState(i, randCol);
 				}
+			} else if (swap && randRow < (int)state.n_rows - 1) {
+				std::swap(newState(randRow, randCol), newState(randRow + 1, randCol));
 			} else {
 				newState(randRow, randCol) = ~newState(randRow, randCol);
 			}
@@ -94,7 +106,7 @@ int main(int, char**) {
 
 	arma::field<Action> initState(iterations, numBots);
 	initState.fill(Action::Cooperate);
-	SimulatedAnnealer<arma::field<Action>> annealer(10000, initState, new ActionNeighbourGenerator(), new EigenMosesEnergy(), new MyTemperatureSchedule());
+	SimulatedAnnealer<arma::field<Action>> annealer(500000, initState, new ActionNeighbourGenerator(), new EigenMosesEnergy(), new MyTemperatureSchedule());
 	annealer.anneal();
 
 	auto finalState = annealer.currentState();
